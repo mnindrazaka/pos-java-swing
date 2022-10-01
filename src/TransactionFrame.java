@@ -5,13 +5,15 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class TransactionFrame extends JFrame {
+    private Shop shop;
     private JButton buttonCreate = new JButton("Create new transaction");
     private JButton buttonRefresh = new JButton("Refresh");
 
     private DefaultTableModel tableModel = new DefaultTableModel();
     private JTable table = new JTable(tableModel);
 
-    public TransactionFrame() {
+    public TransactionFrame(Shop shop) {
+        this.shop = shop;
         initLayout();
         initEventListener();
         updateTable();
@@ -60,12 +62,12 @@ public class TransactionFrame extends JFrame {
 
     private void updateTable() {
         tableModel.setRowCount(0);
-        for (Transaction transaction : Shop.instance.transactions)
+        for (Transaction transaction : shop.transactions)
             tableModel.addRow(new Object[]{transaction.customer, transaction.getTotal(), transaction.money, transaction.getChange()});
     }
 
     private void onButtonCreateClick() {
-        CreateTransactionFrame createTransactionFrame = new CreateTransactionFrame();
+        CreateTransactionFrame createTransactionFrame = new CreateTransactionFrame(shop);
         createTransactionFrame.setLocationRelativeTo(this);
         createTransactionFrame.setVisible(true);
     }

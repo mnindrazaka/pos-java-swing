@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CreateTransactionFrame extends JFrame {
+    private Shop shop;
+
     private Transaction transaction = new Transaction();
 
     private JLabel labelProduct = new JLabel("Product");
@@ -34,14 +36,15 @@ public class CreateTransactionFrame extends JFrame {
 
     private JButton buttonSubmit = new JButton("Submit");
 
-    public CreateTransactionFrame() {
+    public CreateTransactionFrame(Shop shop) {
+        this.shop = shop;
         initLayout();
         initEventListener();
         updateTable();
     }
 
     public void initLayout() {
-        for (Product product : Shop.instance.products) {
+        for (Product product : shop.products) {
             comboBoxProduct.addItem(product);
         }
 
@@ -220,7 +223,7 @@ public class CreateTransactionFrame extends JFrame {
     }
 
     public void onButtonSubmitClick() {
-        Shop.instance.transactions.add(transaction);
+        shop.transactions.add(transaction);
         transaction = new Transaction();
         resetItemForm();
         updateTable();
@@ -245,7 +248,7 @@ public class CreateTransactionFrame extends JFrame {
     }
 
     public void resetItemForm() {
-        comboBoxProduct.setSelectedItem(Shop.instance.products.get(0));
+        comboBoxProduct.setSelectedItem(shop.products.get(0));
         textFieldAmount.setText("");
     }
 

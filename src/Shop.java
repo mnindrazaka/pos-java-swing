@@ -1,8 +1,11 @@
 import java.util.ArrayList;
 
 public class Shop {
-    public ArrayList<Product> products = new ArrayList<>();
-    public ArrayList<Transaction> transactions = new ArrayList<>();
+    public ArrayList<Product> products;
+    public ArrayList<Transaction> transactions;
 
-    public static Shop instance = new Shop();
+    public Shop(ArrayList<Product> products, ArrayList<Transaction> transactions) {
+        this.products = products;
+        this.transactions = transactions;
+    }
 }

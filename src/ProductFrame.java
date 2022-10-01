@@ -3,6 +3,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class ProductFrame extends JFrame {
+    private Shop shop;
     private JLabel labelName = new JLabel("Name");
     private JTextField textFieldName = new JTextField(20);
     private JLabel labelPrice = new JLabel("Price");
@@ -13,7 +14,8 @@ public class ProductFrame extends JFrame {
     private DefaultTableModel tableModel = new DefaultTableModel();
     private JTable tableProducts = new JTable(tableModel);
 
-    public ProductFrame() {
+    public ProductFrame(Shop shop) {
+        this.shop = shop;
         initLayout();
         initEventListener();
         updateTable();
@@ -98,7 +100,7 @@ public class ProductFrame extends JFrame {
 
     private void updateTable() {
         tableModel.setNumRows(0);
-        for (Product product : Shop.instance.products)
+        for (Product product : shop.products)
             tableModel.addRow(new Object[]{product.name, product.price});
     }
 
@@ -109,9 +111,9 @@ public class ProductFrame extends JFrame {
         int price = Integer.parseInt(textFieldPrice.getText());
 
         if (row >= 0) {
-            Shop.instance.products.set(row, new Product(name,  price));
+            shop.products.set(row, new Product(name,  price));
         } else {
-            Shop.instance.products.add(new Product(name, price));
+            shop.products.add(new Product(name, price));
         }
 
         updateTable();
@@ -120,7 +122,7 @@ public class ProductFrame extends JFrame {
 
     private void onButtonDeleteClick() {
         int row = tableProducts.getSelectedRow();
-        Shop.instance.products.remove(row);
+        shop.products.remove(row);
         updateTable();
         resetForm();
     }

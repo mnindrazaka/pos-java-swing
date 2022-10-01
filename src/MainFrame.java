@@ -1,33 +1,19 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
-    ProductFrame productFrame = new ProductFrame();
-    TransactionFrame transactionFrame = new TransactionFrame();
+    private Shop shop;
+    private JMenuBar menuBar = new JMenuBar();
+    private JMenu menu = new JMenu("action");
+    private JMenuItem menuItemProduct = new JMenuItem("product");
+    private JMenuItem menuItemTransaction = new JMenuItem("transaction");
 
-    public MainFrame() {
-        productFrame.setLocationRelativeTo(this);
-        transactionFrame.setLocationRelativeTo(this);
+    public MainFrame(Shop shop) {
+        this.shop = shop;
+        initLayout();
+        initEventHandler();
+    }
 
-        JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("action");
-        JMenuItem menuItemProduct = new JMenuItem("product");
-        menuItemProduct.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                productFrame.setVisible(true);
-            }
-        });
-
-        JMenuItem menuItemTransaction = new JMenuItem("transaction");
-        menuItemTransaction.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                transactionFrame.setVisible(true);
-            }
-        });
-
+    public void initLayout() {
         menu.add(menuItemProduct);
         menu.add(menuItemTransaction);
         menuBar.add(menu);
@@ -37,5 +23,22 @@ public class MainFrame extends JFrame {
         this.setJMenuBar(menuBar);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    public void initEventHandler() {
+        menuItemProduct.addActionListener(e -> onMenuItemProductClick());
+        menuItemTransaction.addActionListener(e -> onMenuItemTransactionClick());
+    }
+
+    public void onMenuItemProductClick() {
+        ProductFrame productFrame = new ProductFrame(shop);
+        productFrame.setLocationRelativeTo(this);
+        productFrame.setVisible(true);
+    }
+
+    public void onMenuItemTransactionClick() {
+        TransactionFrame transactionFrame = new TransactionFrame(shop);
+        transactionFrame.setLocationRelativeTo(this);
+        transactionFrame.setVisible(true);
     }
 }
