@@ -19,7 +19,7 @@ public class Main {
 
         Shop shop = new Shop(products, transactions);
 
-        MainFrame mainFrame = new MainFrame(shop);
+        MainFrame mainFrame = new MainFrame(new MainFrameProps(shop));
         mainFrame.setVisible(true);
     }
 }

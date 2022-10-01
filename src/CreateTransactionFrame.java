@@ -3,11 +3,23 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+interface CreateTransactionFrameCallback {
+    public void onButtonSubmitClick();
+}
+
+class CreateTransactionFrameProps {
+    public Shop shop;
+    public CreateTransactionFrameCallback callback;
+
+    public CreateTransactionFrameProps(Shop shop, CreateTransactionFrameCallback callback) {
+        this.shop = shop;
+        this.callback = callback;
+    }
+}
 
 public class CreateTransactionFrame extends JFrame {
-    private Shop shop;
+    private CreateTransactionFrameProps props;
 
     private Transaction transaction = new Transaction();
 
@@ -36,15 +48,15 @@ public class CreateTransactionFrame extends JFrame {
 
     private JButton buttonSubmit = new JButton("Submit");
 
-    public CreateTransactionFrame(Shop shop) {
-        this.shop = shop;
+    public CreateTransactionFrame(CreateTransactionFrameProps props) {
+        this.props = props;
         initLayout();
         initEventListener();
         updateTable();
     }
 
     public void initLayout() {
-        for (Product product : shop.products) {
+        for (Product product : props.shop.products) {
             comboBoxProduct.addItem(product);
         }
 
@@ -223,17 +235,20 @@ public class CreateTransactionFrame extends JFrame {
     }
 
     public void onButtonSubmitClick() {
-        shop.transactions.add(transaction);
+        props.shop.transactions.add(transaction);
         transaction = new Transaction();
         resetItemForm();
         updateTable();
         resetDetailForm();
+        props.callback.onButtonSubmitClick();
     }
 
     public void onTextFieldMoneyChange() {
-       int money = Integer.parseInt(textFieldMoney.getText());
-       transaction.money = money;
-       textFieldChange.setText(Integer.toString(transaction.getChange()));
+        if (!textFieldMoney.getText().isEmpty()) {
+            int money = Integer.parseInt(textFieldMoney.getText());
+            transaction.money = money;
+            textFieldChange.setText(Integer.toString(transaction.getChange()));
+        }
     }
 
     public void onTextFieldCustomerChange() {
@@ -248,7 +263,7 @@ public class CreateTransactionFrame extends JFrame {
     }
 
     public void resetItemForm() {
-        comboBoxProduct.setSelectedItem(shop.products.get(0));
+        comboBoxProduct.setSelectedItem(props.shop.products.get(0));
         textFieldAmount.setText("");
     }
 

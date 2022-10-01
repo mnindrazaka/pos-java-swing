@@ -2,8 +2,15 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+class ProductFrameProps {
+    Shop shop;
+    public ProductFrameProps(Shop shop) {
+        this.shop = shop;
+    }
+}
+
 public class ProductFrame extends JFrame {
-    private Shop shop;
+    private ProductFrameProps props;
     private JLabel labelName = new JLabel("Name");
     private JTextField textFieldName = new JTextField(20);
     private JLabel labelPrice = new JLabel("Price");
@@ -14,8 +21,8 @@ public class ProductFrame extends JFrame {
     private DefaultTableModel tableModel = new DefaultTableModel();
     private JTable tableProducts = new JTable(tableModel);
 
-    public ProductFrame(Shop shop) {
-        this.shop = shop;
+    public ProductFrame(ProductFrameProps props) {
+        this.props = props;
         initLayout();
         initEventListener();
         updateTable();
@@ -100,7 +107,7 @@ public class ProductFrame extends JFrame {
 
     private void updateTable() {
         tableModel.setNumRows(0);
-        for (Product product : shop.products)
+        for (Product product : props.shop.products)
             tableModel.addRow(new Object[]{product.name, product.price});
     }
 
@@ -111,9 +118,9 @@ public class ProductFrame extends JFrame {
         int price = Integer.parseInt(textFieldPrice.getText());
 
         if (row >= 0) {
-            shop.products.set(row, new Product(name,  price));
+            props.shop.products.set(row, new Product(name,  price));
         } else {
-            shop.products.add(new Product(name, price));
+            props.shop.products.add(new Product(name, price));
         }
 
         updateTable();
@@ -122,7 +129,7 @@ public class ProductFrame extends JFrame {
 
     private void onButtonDeleteClick() {
         int row = tableProducts.getSelectedRow();
-        shop.products.remove(row);
+        props.shop.products.remove(row);
         updateTable();
         resetForm();
     }

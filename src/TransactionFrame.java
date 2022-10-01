@@ -1,19 +1,23 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+
+class TransactionFrameProps {
+    Shop shop;
+    public TransactionFrameProps(Shop shop) {
+        this.shop = shop;
+    }
+}
 
 public class TransactionFrame extends JFrame {
-    private Shop shop;
+    private TransactionFrameProps props;
     private JButton buttonCreate = new JButton("Create new transaction");
-    private JButton buttonRefresh = new JButton("Refresh");
 
     private DefaultTableModel tableModel = new DefaultTableModel();
     private JTable table = new JTable(tableModel);
 
-    public TransactionFrame(Shop shop) {
-        this.shop = shop;
+    public TransactionFrame(TransactionFrameProps props) {
+        this.props = props;
         initLayout();
         initEventListener();
         updateTable();
@@ -38,15 +42,8 @@ public class TransactionFrame extends JFrame {
 
         constraints.fill = GridBagConstraints.HORIZONTAL;
         constraints.weightx = 1;
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        panel.add(buttonRefresh, constraints);
-
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 1;
-        constraints.gridwidth = 2;
         constraints.gridx = 0;
-        constraints.gridy = 2;
+        constraints.gridy = 1;
         constraints.ipady = 200;
         panel.add(table, constraints);
 
@@ -57,17 +54,16 @@ public class TransactionFrame extends JFrame {
 
     private void initEventListener() {
         buttonCreate.addActionListener(e -> onButtonCreateClick());
-        buttonRefresh.addActionListener(e -> updateTable());
     }
 
     private void updateTable() {
         tableModel.setRowCount(0);
-        for (Transaction transaction : shop.transactions)
+        for (Transaction transaction : props.shop.transactions)
             tableModel.addRow(new Object[]{transaction.customer, transaction.getTotal(), transaction.money, transaction.getChange()});
     }
 
     private void onButtonCreateClick() {
-        CreateTransactionFrame createTransactionFrame = new CreateTransactionFrame(shop);
+        CreateTransactionFrame createTransactionFrame = new CreateTransactionFrame(new CreateTransactionFrameProps(props.shop, () -> updateTable()));
         createTransactionFrame.setLocationRelativeTo(this);
         createTransactionFrame.setVisible(true);
     }

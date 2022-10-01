@@ -1,14 +1,21 @@
 import javax.swing.*;
 
+class MainFrameProps {
+    Shop shop;
+    public MainFrameProps(Shop shop) {
+        this.shop = shop;
+    }
+}
+
 public class MainFrame extends JFrame {
-    private Shop shop;
+    private MainFrameProps props;
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menu = new JMenu("action");
     private JMenuItem menuItemProduct = new JMenuItem("product");
     private JMenuItem menuItemTransaction = new JMenuItem("transaction");
 
-    public MainFrame(Shop shop) {
-        this.shop = shop;
+    public MainFrame(MainFrameProps props) {
+        this.props = props;
         initLayout();
         initEventHandler();
     }
@@ -31,13 +38,13 @@ public class MainFrame extends JFrame {
     }
 
     public void onMenuItemProductClick() {
-        ProductFrame productFrame = new ProductFrame(shop);
+        ProductFrame productFrame = new ProductFrame(new ProductFrameProps(props.shop));
         productFrame.setLocationRelativeTo(this);
         productFrame.setVisible(true);
     }
 
     public void onMenuItemTransactionClick() {
-        TransactionFrame transactionFrame = new TransactionFrame(shop);
+        TransactionFrame transactionFrame = new TransactionFrame(new TransactionFrameProps(props.shop));
         transactionFrame.setLocationRelativeTo(this);
         transactionFrame.setVisible(true);
     }
